@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #05080f;
+  color: #E5EAF3;
+  font-feature-settings: "ss01", "cv01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-6 lg:px-10;
+  }
+  .section-pad {
+    @apply py-20 sm:py-28;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium tracking-wide text-steel-200 uppercase;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 py-3 text-sm font-semibold text-ink-950 shadow-glow transition-all hover:bg-accent-400 hover:-translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-300;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-steel-100 transition-all hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30;
+  }
+  .card {
+    @apply rounded-xl border border-white/[0.08] bg-white/[0.025] p-6 backdrop-blur-sm shadow-ring;
+  }
+  .hairline {
+    @apply border-white/10;
+  }
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: -1px -1px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 80%);
+}
+
+::selection {
+  background: rgba(255, 122, 26, 0.35);
+  color: #fff;
+}
