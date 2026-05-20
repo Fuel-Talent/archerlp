@@ -7,7 +7,6 @@ import { schema } from "./sanity/schemas";
 export default defineConfig({
   name: "archer-lp",
   title: "Archer Landing Page",
-  basePath: "/studio",
   projectId,
   dataset,
   schema,

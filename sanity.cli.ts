@@ -5,5 +5,9 @@ const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 
 export default defineCliConfig({
   api: { projectId, dataset },
-  autoUpdates: true,
+  studioHost: "archer-lp",
+  deployment: {
+    appId: "lyjqogg7w268epr6sp02lhma",
+    autoUpdates: true,
+  },
 });
