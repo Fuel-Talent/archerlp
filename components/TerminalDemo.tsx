@@ -2,32 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import type { LandingContent, TerminalLine } from "@/content/types";
 
-type Line =
-  | { kind: "prompt"; text: string }
-  | { kind: "out"; text: string; tone?: "info" | "warn" | "err" | "ok" | "muted" }
-  | { kind: "section"; text: string }
-  | { kind: "spacer" };
-
-const script: Line[] = [
-  { kind: "prompt", text: "archer triage --incident INC-4821 --autonomous" },
-  { kind: "out", tone: "muted", text: "[10:42:01] connected: grafana, sumologic, appdynamics, datadog" },
-  { kind: "out", tone: "warn", text: "[10:42:03] detected: p95 latency on /checkout +312% over 5m baseline" },
-  { kind: "out", tone: "info", text: "[10:42:04] correlating logs across 14 services… 1,247,932 lines" },
-  { kind: "section", text: "▌ root cause analysis" },
-  { kind: "out", tone: "info", text: "[10:42:07] tracing causality (not just timestamps)…" },
-  { kind: "out", tone: "ok", text: "[10:42:11] candidate: deploy svc-orders rev a91f2d4 (12m ago)" },
-  { kind: "out", tone: "info", text: "[10:42:11] db conn-pool exhaustion → new ORM query w/o index" },
-  { kind: "out", tone: "info", text: "[10:42:12] confidence: 0.94 — runbook RB-318 matches risk tolerance" },
-  { kind: "section", text: "▌ action" },
-  { kind: "out", tone: "warn", text: "[10:42:13] proposing: rollback svc-orders → rev 4ef02c1" },
-  { kind: "out", tone: "ok", text: "[10:42:14] policy: auto-approved (within blast radius < 0.5%)" },
-  { kind: "out", tone: "ok", text: "[10:42:22] rollback complete — p95 returning to baseline" },
-  { kind: "spacer" },
-  { kind: "out", tone: "ok", text: "MTTR: 00:00:21  ·  data gathered autonomously  ·  0 humans paged" },
-];
-
-const toneClass: Record<NonNullable<Extract<Line, { kind: "out" }>["tone"]>, string> = {
+const toneClass: Record<NonNullable<Extract<TerminalLine, { kind: "out" }>["tone"]>, string> = {
   info: "text-steel-200",
   warn: "text-amber-300",
   err: "text-rose-400",
@@ -35,15 +12,20 @@ const toneClass: Record<NonNullable<Extract<Line, { kind: "out" }>["tone"]>, str
   muted: "text-steel-400",
 };
 
-export default function TerminalDemo() {
+export default function TerminalDemo({
+  content,
+}: {
+  content: LandingContent["terminal"];
+}) {
+  const script = content.script;
   const [visible, setVisible] = useState<number>(0);
   const [typed, setTyped] = useState<string>("");
   const timer = useRef<number | null>(null);
 
-  const promptText = useMemo(
-    () => (script[0].kind === "prompt" ? script[0].text : ""),
-    []
-  );
+  const promptText = useMemo(() => {
+    const first = script[0];
+    return first && first.kind === "prompt" ? first.text : "";
+  }, [script]);
 
   useEffect(() => {
     let i = 0;
@@ -71,7 +53,7 @@ export default function TerminalDemo() {
     return () => {
       if (timer.current) window.clearTimeout(timer.current);
     };
-  }, [promptText]);
+  }, [promptText, script.length]);
 
   return (
     <motion.div
@@ -88,10 +70,10 @@ export default function TerminalDemo() {
           <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
         </div>
         <div className="text-xs font-mono text-steel-400 select-none">
-          archer@prod-vpc · ~/incidents
+          {content.user} · {content.path}
         </div>
         <div className="text-[10px] uppercase tracking-wider text-steel-500 font-medium">
-          live · in-vpc
+          {content.status}
         </div>
       </div>
       <div className="p-5 font-mono text-[13px] leading-6 min-h-[360px]">

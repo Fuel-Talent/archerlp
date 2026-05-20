@@ -3,36 +3,32 @@
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
+import type { CellValue, LandingContent } from "@/content/types";
 
-const rows = [
-  { label: "Data stays inside your VPC", saas: false, archer: true },
-  { label: "Air-gappable / FedRAMP-ready deployment", saas: false, archer: true },
-  { label: "Trained only on your runbooks (no cross-tenant model)", saas: false, archer: true },
-  { label: "Acts autonomously within your risk tolerances", saas: "limited", archer: true },
-  { label: "Integrates with Grafana, Sumo, AppDynamics, Datadog", saas: true, archer: true },
-  { label: "Can be deployed in any cloud environment (AWS / Azure / GCP / on-prem)", saas: false, archer: true },
-  { label: "No per-seat subscription required", saas: false, archer: true },
-];
-
-function Cell({ value }: { value: true | false | "limited" }) {
-  if (value === true) {
+function Cell({ value }: { value: CellValue }) {
+  if (value === "true") {
     return <Check className="h-5 w-5 text-emerald-400" />;
   }
-  if (value === false) {
+  if (value === "false") {
     return <X className="h-5 w-5 text-rose-400" />;
   }
   return <span className="text-xs font-medium text-amber-300">Limited</span>;
 }
 
-export default function Differentiation() {
+export default function Differentiation({
+  content,
+}: {
+  content: LandingContent["differentiation"];
+}) {
   return (
     <AnimatedSection className="section-pad border-t border-white/5">
       <div className="container-x">
         <div className="max-w-3xl">
-          <span className="eyebrow">Why not SaaS?</span>
+          {content.eyebrow ? (
+            <span className="eyebrow">{content.eyebrow}</span>
+          ) : null}
           <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            Can your team use a multi-tenant SaaS AI tool that processes
-            production telemetry outside your VPC?
+            {content.headline}
           </h2>
         </div>
 
@@ -45,15 +41,12 @@ export default function Differentiation() {
             className="card"
           >
             <div className="text-xs uppercase tracking-wider text-steel-400">
-              If yes →
+              {content.leftCard.eyebrow}
             </div>
             <h3 className="mt-2 text-xl font-semibold text-white">
-              SaaS platforms are faster and cheaper.
+              {content.leftCard.title}
             </h3>
-            <p className="mt-2 text-sm text-steel-300">
-              Datadog Bits AI or Cleric.ai are great options. We&apos;ll cheerfully tell
-              you so — Archer is built for teams where SaaS isn&apos;t a viable path.
-            </p>
+            <p className="mt-2 text-sm text-steel-300">{content.leftCard.body}</p>
           </motion.div>
 
           <motion.div
@@ -64,17 +57,12 @@ export default function Differentiation() {
             className="card border-accent/30 bg-accent/[0.04]"
           >
             <div className="text-xs uppercase tracking-wider text-accent-300">
-              If no →
+              {content.rightCard.eyebrow}
             </div>
             <h3 className="mt-2 text-xl font-semibold text-white">
-              Archer is the only path to autonomous SRE that meets your
-              compliance and security requirements.
+              {content.rightCard.title}
             </h3>
-            <p className="mt-2 text-sm text-steel-300">
-              Production telemetry never leaves your boundary. Your security
-              team can audit the agent, the model weights, and every action it
-              takes.
-            </p>
+            <p className="mt-2 text-sm text-steel-300">{content.rightCard.body}</p>
           </motion.div>
         </div>
 
@@ -84,7 +72,7 @@ export default function Differentiation() {
             <div className="px-6 py-3 text-center">SaaS AI</div>
             <div className="px-6 py-3 text-center text-accent-300">Archer</div>
           </div>
-          {rows.map((r, i) => (
+          {content.rows.map((r, i) => (
             <div
               key={r.label}
               className={`grid grid-cols-[1.4fr,0.6fr,0.6fr] items-center text-sm ${
@@ -93,10 +81,10 @@ export default function Differentiation() {
             >
               <div className="px-6 py-4 text-steel-200">{r.label}</div>
               <div className="px-6 py-4 flex justify-center">
-                <Cell value={r.saas as true | false | "limited"} />
+                <Cell value={r.saas} />
               </div>
               <div className="px-6 py-4 flex justify-center">
-                <Cell value={r.archer as true | false | "limited"} />
+                <Cell value={r.archer} />
               </div>
             </div>
           ))}

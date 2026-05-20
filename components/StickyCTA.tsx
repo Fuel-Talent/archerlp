@@ -4,10 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { track } from "@/lib/analytics";
+import type { LandingContent } from "@/content/types";
 
 const DEPTHS = [25, 50, 75, 100];
 
-export default function StickyCTA() {
+export default function StickyCTA({
+  content,
+}: {
+  content: LandingContent["stickyCta"];
+}) {
   const [show, setShow] = useState(false);
   const fired = useRef<Set<number>>(new Set());
 
@@ -47,10 +52,10 @@ export default function StickyCTA() {
             <div className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-ink-900/95 backdrop-blur-md px-5 py-3 shadow-ring">
               <div className="min-w-0">
                 <div className="text-sm font-semibold text-white truncate">
-                  Create a free account — instant sandbox access.
+                  {content.headline}
                 </div>
                 <div className="text-xs text-steel-400 truncate">
-                  No calendar required · or book a call with our SRE team
+                  {content.sub}
                 </div>
               </div>
               <a
@@ -58,7 +63,7 @@ export default function StickyCTA() {
                 onClick={() => track("cta_click", { location: "sticky_bar" })}
                 className="btn-primary text-xs px-4 py-2 whitespace-nowrap"
               >
-                Get instant access
+                {content.ctaLabel}
                 <ArrowRight className="h-3.5 w-3.5" />
               </a>
             </div>

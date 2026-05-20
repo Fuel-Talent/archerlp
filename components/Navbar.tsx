@@ -3,16 +3,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { track } from "@/lib/analytics";
+import type { LandingContent } from "@/content/types";
 
-const links = [
-  { href: "#problem", label: "Problem" },
-  { href: "#solution", label: "Solution" },
-  { href: "#proof", label: "Proof" },
-  { href: "#how", label: "How it works" },
-  { href: "#demo", label: "Demo" },
-];
-
-export default function Navbar() {
+export default function Navbar({ content }: { content: LandingContent["nav"] }) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -36,16 +29,17 @@ export default function Navbar() {
       <div className="container-x flex h-16 items-center justify-between">
         <a href="#top" className="flex items-center gap-2.5">
           <span className="grid h-8 w-8 place-items-center rounded-md bg-accent text-ink-950 font-black">
-            A
+            {content.logoText.charAt(0)}
           </span>
           <span className="text-sm font-semibold tracking-tight">
-            Archer<span className="text-steel-400">.sre</span>
+            {content.logoText}
+            <span className="text-steel-400">{content.logoSubText}</span>
           </span>
         </a>
         <nav className="hidden md:flex items-center gap-7">
-          {links.map((l) => (
+          {content.links.map((l) => (
             <a
-              key={l.href}
+              key={l.href + l.label}
               href={l.href}
               className="text-sm text-steel-300 hover:text-white transition-colors"
             >
@@ -58,7 +52,7 @@ export default function Navbar() {
           onClick={() => track("cta_click", { location: "navbar" })}
           className="btn-primary text-xs px-4 py-2"
         >
-          Get instant access
+          {content.ctaLabel}
         </a>
       </div>
     </motion.header>

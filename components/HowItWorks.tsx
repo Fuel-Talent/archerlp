@@ -1,45 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Boxes, BookOpen, Activity, Handshake } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
+import { Icon } from "./icons";
+import type { LandingContent } from "@/content/types";
 
-const steps = [
-  {
-    icon: Boxes,
-    title: "Deploy Archer in your environment",
-    body: "Container deployment to your AWS/Azure/GCP account. Connects to your existing observability tools via read-only credentials.",
-  },
-  {
-    icon: BookOpen,
-    title: "Archer learns your runbooks & wikis",
-    body: "Custom RAG brain trained only on your documentation. No model training on your data, no external knowledge bleed.",
-  },
-  {
-    icon: Activity,
-    title: "Incidents trigger autonomous triage",
-    body: "Real-time log analysis, causality mapping, and root cause isolation — within seconds of the first alert firing.",
-  },
-  {
-    icon: Handshake,
-    title: "Archer resolves or escalates with full context",
-    body: "Takes action within your stated risk tolerances. Or hands off to humans with 90% of the investigation complete.",
-  },
-];
-
-export default function HowItWorks() {
+export default function HowItWorks({
+  content,
+}: {
+  content: LandingContent["howItWorks"];
+}) {
   return (
     <AnimatedSection id="how" className="section-pad border-t border-white/5">
       <div className="container-x">
         <div className="max-w-2xl">
-          <span className="eyebrow">How it works</span>
+          {content.eyebrow ? (
+            <span className="eyebrow">{content.eyebrow}</span>
+          ) : null}
           <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            From container to autonomous SRE in days, not quarters.
+            {content.headline}
           </h2>
         </div>
 
         <ol className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {steps.map((s, i) => (
+          {content.steps.map((s, i) => (
             <motion.li
               key={s.title}
               initial={{ opacity: 0, y: 16 }}
@@ -50,7 +34,7 @@ export default function HowItWorks() {
             >
               <div className="flex items-center justify-between">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent ring-1 ring-accent/20">
-                  <s.icon className="h-5 w-5" />
+                  <Icon name={s.icon} className="h-5 w-5" />
                 </div>
                 <span className="font-mono text-xs text-steel-500">
                   0{i + 1}

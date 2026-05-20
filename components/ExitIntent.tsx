@@ -4,10 +4,15 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, X } from "lucide-react";
 import { track } from "@/lib/analytics";
+import type { LandingContent } from "@/content/types";
 
 const STORAGE_KEY = "archer-exit-intent-shown";
 
-export default function ExitIntent() {
+export default function ExitIntent({
+  content,
+}: {
+  content: LandingContent["exitIntent"];
+}) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -56,16 +61,18 @@ export default function ExitIntent() {
             >
               <X className="h-4 w-4" />
             </button>
-            <div className="eyebrow">Before you go</div>
-            <h3 id="exit-intent-title" className="mt-3 text-2xl font-semibold tracking-tight text-white">
-              Free account → instant demo in under a minute.
+            {content.eyebrow ? (
+              <div className="eyebrow">{content.eyebrow}</div>
+            ) : null}
+            <h3
+              id="exit-intent-title"
+              className="mt-3 text-2xl font-semibold tracking-tight text-white"
+            >
+              {content.headline}
             </h3>
-            <p className="mt-2 text-sm text-steel-300">
-              Skip the sales call. Create a free account and drop straight into a
-              sandbox where Archer is triaging a real incident.
-            </p>
+            <p className="mt-2 text-sm text-steel-300">{content.sub}</p>
             <div className="mt-5 aspect-video rounded-lg border border-white/10 bg-ink-800/60 grid place-items-center text-steel-500 text-xs font-mono">
-              [ video placeholder · 1:54 ]
+              {content.videoPlaceholder}
             </div>
             <div className="mt-5 flex flex-wrap gap-3">
               <a
@@ -76,11 +83,11 @@ export default function ExitIntent() {
                 }}
                 className="btn-primary"
               >
-                Get instant access
+                {content.primaryCta}
                 <ArrowRight className="h-4 w-4" />
               </a>
               <button onClick={close} className="btn-secondary">
-                Maybe later
+                {content.secondaryCta}
               </button>
             </div>
           </motion.div>

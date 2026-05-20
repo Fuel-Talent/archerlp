@@ -2,24 +2,17 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Loader2, Sparkles, CalendarClock } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
+import { Icon } from "./icons";
 import { track } from "@/lib/analytics";
+import type { LandingContent } from "@/content/types";
 
 type InstantForm = { name: string; email: string; company: string };
 type CallForm = { name: string; email: string; company: string; role: string; pain: string };
 
 const initialInstant: InstantForm = { name: "", email: "", company: "" };
 const initialCall: CallForm = { name: "", email: "", company: "", role: "", pain: "" };
-
-const roles = [
-  "CTO",
-  "VP Engineering",
-  "Director of SRE / Platform",
-  "Engineering Manager",
-  "Principal / Staff SRE",
-  "Other",
-];
 
 const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
@@ -41,31 +34,38 @@ function validateCall(f: CallForm) {
   return errs;
 }
 
-export default function DemoCTA() {
+export default function DemoCTA({
+  content,
+}: {
+  content: LandingContent["demo"];
+}) {
   return (
     <AnimatedSection id="demo" className="section-pad border-t border-white/5">
       <div className="container-x">
         <div className="max-w-3xl">
-          <span className="eyebrow">Try Archer</span>
+          {content.eyebrow ? (
+            <span className="eyebrow">{content.eyebrow}</span>
+          ) : null}
           <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            Two ways to get hands-on with Archer.
+            {content.headline}
           </h2>
-          <p className="mt-4 text-steel-300">
-            Most teams want to poke at it themselves. Some want a guided tour
-            with our SRE engineers. Both take 30 minutes or less.
-          </p>
+          <p className="mt-4 text-steel-300">{content.sub}</p>
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
-          <InstantAccessCard />
-          <BookCallCard />
+          <InstantAccessCard content={content.instantCard} />
+          <BookCallCard content={content.bookCallCard} />
         </div>
       </div>
     </AnimatedSection>
   );
 }
 
-function InstantAccessCard() {
+function InstantAccessCard({
+  content,
+}: {
+  content: LandingContent["demo"]["instantCard"];
+}) {
   const [form, setForm] = useState<InstantForm>(initialInstant);
   const [errors, setErrors] = useState<Partial<Record<keyof InstantForm, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -104,19 +104,16 @@ function InstantAccessCard() {
       <div className="relative">
         <div className="flex items-center justify-between">
           <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-accent text-ink-950 ring-1 ring-accent/30">
-            <Sparkles className="h-5 w-5" />
+            <Icon name="Sparkles" className="h-5 w-5" />
           </div>
           <span className="text-[10px] uppercase tracking-wider font-semibold text-accent-300 bg-accent/10 border border-accent/30 rounded-full px-2.5 py-1">
-            Recommended
+            {content.pillLabel}
           </span>
         </div>
         <h3 className="mt-5 text-xl font-semibold text-white">
-          Instant sandbox access
+          {content.title}
         </h3>
-        <p className="mt-2 text-sm text-steel-300">
-          Create a free account. Drop straight into a live sandbox where
-          Archer is triaging a real incident. No sales call required.
-        </p>
+        <p className="mt-2 text-sm text-steel-300">{content.body}</p>
 
         {done ? (
           <motion.div
@@ -124,13 +121,11 @@ function InstantAccessCard() {
             animate={{ opacity: 1, y: 0 }}
             className="mt-6 rounded-xl border border-emerald-400/30 bg-emerald-400/[0.06] p-6 text-center"
           >
-            <CheckCircle2 className="mx-auto h-9 w-9 text-emerald-400" />
+            <Icon name="CheckCircle2" className="mx-auto h-9 w-9 text-emerald-400" />
             <h4 className="mt-3 text-base font-semibold text-white">
-              Account created — launching your sandbox.
+              {content.successTitle}
             </h4>
-            <p className="mt-1.5 text-xs text-steel-200">
-              Check your inbox for a magic link. The demo will be live for 7 days.
-            </p>
+            <p className="mt-1.5 text-xs text-steel-200">{content.successBody}</p>
           </motion.div>
         ) : (
           <form onSubmit={onSubmit} noValidate className="mt-6 space-y-4">
@@ -182,19 +177,16 @@ function InstantAccessCard() {
               {submitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Creating account…
+                  {content.ctaLoadingLabel}
                 </>
               ) : (
                 <>
-                  Create free account &amp; launch demo
+                  {content.ctaLabel}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>
-            <p className="text-[11px] text-steel-500">
-              Free forever for sandbox access. No credit card. Single sign-on
-              supported.
-            </p>
+            <p className="text-[11px] text-steel-500">{content.fineprint}</p>
           </form>
         )}
       </div>
@@ -202,7 +194,11 @@ function InstantAccessCard() {
   );
 }
 
-function BookCallCard() {
+function BookCallCard({
+  content,
+}: {
+  content: LandingContent["demo"]["bookCallCard"];
+}) {
   const [form, setForm] = useState<CallForm>(initialCall);
   const [errors, setErrors] = useState<Partial<Record<keyof CallForm, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -239,20 +235,14 @@ function BookCallCard() {
     >
       <div className="flex items-center justify-between">
         <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/5 text-steel-100 ring-1 ring-white/10">
-          <CalendarClock className="h-5 w-5" />
+          <Icon name="CalendarClock" className="h-5 w-5" />
         </div>
         <span className="text-[10px] uppercase tracking-wider font-medium text-steel-400">
-          Skip the demo
+          {content.pillLabel}
         </span>
       </div>
-      <h3 className="mt-5 text-xl font-semibold text-white">
-        Book a call with our SRE team
-      </h3>
-      <p className="mt-2 text-sm text-steel-300">
-        Prefer a guided tour? 30 minutes with the engineers who built Archer.
-        They&apos;ll walk through your stack and answer your toughest
-        observability questions.
-      </p>
+      <h3 className="mt-5 text-xl font-semibold text-white">{content.title}</h3>
+      <p className="mt-2 text-sm text-steel-300">{content.body}</p>
 
       {done ? (
         <motion.div
@@ -260,14 +250,11 @@ function BookCallCard() {
           animate={{ opacity: 1, y: 0 }}
           className="mt-6 rounded-xl border border-emerald-400/30 bg-emerald-400/[0.06] p-6 text-center"
         >
-          <CheckCircle2 className="mx-auto h-9 w-9 text-emerald-400" />
+          <Icon name="CheckCircle2" className="mx-auto h-9 w-9 text-emerald-400" />
           <h4 className="mt-3 text-base font-semibold text-white">
-            You&apos;re on the calendar.
+            {content.successTitle}
           </h4>
-          <p className="mt-1.5 text-xs text-steel-200">
-            We&apos;ll send a calendar link within one business day with a short
-            prep guide.
-          </p>
+          <p className="mt-1.5 text-xs text-steel-200">{content.successBody}</p>
         </motion.div>
       ) : (
         <form onSubmit={onSubmit} noValidate className="mt-6 space-y-4">
@@ -324,7 +311,7 @@ function BookCallCard() {
                   className={inputClass}
                 >
                   <option value="">Select…</option>
-                  {roles.map((r) => (
+                  {content.roles.map((r) => (
                     <option key={r} value={r}>
                       {r}
                     </option>
@@ -354,18 +341,16 @@ function BookCallCard() {
             {submitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Booking…
+                {content.ctaLoadingLabel}
               </>
             ) : (
               <>
-                Book a call
+                {content.ctaLabel}
                 <ArrowRight className="h-4 w-4" />
               </>
             )}
           </button>
-          <p className="text-[11px] text-steel-500 text-center">
-            No spam — one email and one calendar invite.
-          </p>
+          <p className="text-[11px] text-steel-500 text-center">{content.fineprint}</p>
         </form>
       )}
     </motion.div>

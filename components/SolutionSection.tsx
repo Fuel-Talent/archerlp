@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Workflow, Bot, ShieldCheck } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
+import { Icon } from "./icons";
+import type { DemoType, LandingContent } from "@/content/types";
 
 function Bullet({ children }: { children: React.ReactNode }) {
   return (
@@ -78,56 +79,29 @@ function VpcDemo() {
   );
 }
 
-const blocks = [
-  {
-    icon: Workflow,
-    title: "Compresses 4 hours of data gathering to 15 minutes",
-    bullets: [
-      "Auto-correlates logs, metrics, and traces across your observability stack",
-      "Identifies causality — not just timestamps",
-      "Hands engineers a finished investigation, not a haystack",
-    ],
-    demo: <CorrelationDemo />,
-  },
-  {
-    icon: Bot,
-    title: "Handles incidents autonomously — no hand-holding",
-    bullets: [
-      "Maintains interaction memory of your team's risk tolerances",
-      "Takes action without waiting for approval on routine fixes",
-      "Escalates with 90% of the investigation already complete",
-    ],
-    demo: <AutoActionDemo />,
-  },
-  {
-    icon: ShieldCheck,
-    title: "Deploy in your VPC. Own your data. Control your stack.",
-    bullets: [
-      "Runs entirely in your AWS / Azure / GCP environment",
-      "GDPR, HIPAA, and FedRAMP ready out of the box",
-      "Air-gappable for highest-security environments",
-    ],
-    demo: <VpcDemo />,
-  },
-];
+function DemoFor({ type }: { type: DemoType }) {
+  if (type === "correlation") return <CorrelationDemo />;
+  if (type === "autoaction") return <AutoActionDemo />;
+  return <VpcDemo />;
+}
 
-export default function SolutionSection() {
+export default function SolutionSection({
+  content,
+}: {
+  content: LandingContent["solution"];
+}) {
   return (
     <AnimatedSection id="solution" className="section-pad border-t border-white/5">
       <div className="container-x">
         <div className="max-w-3xl">
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            Archer: the autonomous SRE that lives in your infrastructure.
+            {content.headline}
           </h2>
-          <p className="mt-4 text-steel-300">
-            Not another SaaS dashboard. A deployable AI agent that operates
-            entirely within your cloud boundary — with full data sovereignty,
-            zero vendor lock-in, and true autonomy.
-          </p>
+          <p className="mt-4 text-steel-300">{content.sub}</p>
         </div>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          {blocks.map((b, i) => (
+          {content.blocks.map((b, i) => (
             <motion.div
               key={b.title}
               initial={{ opacity: 0, y: 16 }}
@@ -137,7 +111,7 @@ export default function SolutionSection() {
               className="card flex flex-col"
             >
               <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent ring-1 ring-accent/20">
-                <b.icon className="h-5 w-5" />
+                <Icon name={b.icon} className="h-5 w-5" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-white leading-snug">
                 {b.title}
@@ -147,7 +121,9 @@ export default function SolutionSection() {
                   <Bullet key={t}>{t}</Bullet>
                 ))}
               </ul>
-              <div className="mt-6">{b.demo}</div>
+              <div className="mt-6">
+                <DemoFor type={b.demoType} />
+              </div>
             </motion.div>
           ))}
         </div>
