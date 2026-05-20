@@ -120,9 +120,9 @@ export default function SolutionSection({
                 <RichText value={b.title} />
               </h3>
               <ul className="mt-4 space-y-2">
-                {b.bullets.map((t, idx) => (
-                  <Bullet key={idx}>
-                    <RichText value={t} />
+                {b.bullets.map((block, idx) => (
+                  <Bullet key={block._key ?? idx}>
+                    <RichText value={[block]} />
                   </Bullet>
                 ))}
               </ul>

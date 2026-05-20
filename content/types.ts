@@ -102,7 +102,8 @@ export type LandingContent = {
     blocks: {
       icon: IconKey;
       title: RichText;
-      bullets: RichText[];
+      // Each block (paragraph) in this rich text becomes one bullet.
+      bullets: RichText;
       demoType: DemoType;
     }[];
   };
@@ -110,7 +111,8 @@ export type LandingContent = {
     headline: RichText;
     headlineAccent: RichText;
     sub: RichText;
-    bullets: RichText[];
+    // Each block (paragraph) in this rich text becomes one bullet item.
+    bullets: RichText;
     ctaLabel: string;
     metrics: { value: string; label: RichText }[];
     source: string;

@@ -65,15 +65,14 @@ const richTextRequired = (overrides: { name: string; title?: string } & Record<s
     ...overrides,
   });
 
-const richTextArray = (overrides: { name: string; title?: string } & Record<string, unknown>) =>
+// Bullets use a single rich-text field where each block becomes one bullet
+// item — Sanity doesn't support arrays-of-arrays, and this is a friendlier
+// editing experience anyway (just press Enter to add a bullet).
+const richTextBullets = (overrides: { name: string; title?: string } & Record<string, unknown>) =>
   defineField({
     type: "array",
-    of: [
-      defineArrayMember({
-        type: "array",
-        of: [defineArrayMember(richTextBlock)],
-      }),
-    ],
+    of: [defineArrayMember(richTextBlock)],
+    description: "Press Enter to add a new bullet point",
     ...overrides,
   });
 
@@ -287,7 +286,7 @@ export const landingPage = defineType({
               fields: [
                 iconField,
                 richTextRequired({ name: "title" }),
-                richTextArray({ name: "bullets", title: "Bullet points (rich)" }),
+                richTextBullets({ name: "bullets", title: "Bullet points (rich)" }),
                 defineField({
                   name: "demoType",
                   title: "Demo to render",
@@ -312,7 +311,7 @@ export const landingPage = defineType({
         richTextRequired({ name: "headline", title: "Headline (lead-in)" }),
         richTextRequired({ name: "headlineAccent", title: "Headline (orange tail)" }),
         richText({ name: "sub" }),
-        richTextArray({ name: "bullets" }),
+        richTextBullets({ name: "bullets" }),
         defineField({ name: "ctaLabel", type: "string" }),
         defineField({
           name: "metrics",

@@ -29,11 +29,11 @@ export default function ProofSection({
             </p>
 
             <div className="mt-8 space-y-3">
-              {content.bullets.map((t, i) => (
-                <div key={i} className="flex gap-2.5 text-sm text-steel-200">
+              {content.bullets.map((block, i) => (
+                <div key={block._key ?? i} className="flex gap-2.5 text-sm text-steel-200">
                   <Icon name="CheckCircle2" className="h-5 w-5 shrink-0 text-emerald-400" />
                   <span>
-                    <RichText value={t} />
+                    <RichText value={[block]} />
                   </span>
                 </div>
               ))}

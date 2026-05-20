@@ -21,6 +21,17 @@ function pt(text: string): RichText {
   ];
 }
 
+// Helper for bullet lists: produces a single RichText (flat array of blocks),
+// one block per bullet. Each block becomes one bullet at render time.
+function ptList(...texts: string[]): RichText {
+  return texts.map((text) => ({
+    _type: "block" as const,
+    _key: k(),
+    style: "normal" as const,
+    children: [{ _type: "span" as const, _key: k(), text }],
+  }));
+}
+
 export const defaults: LandingContent = {
   meta: {
     title: "Archer — Autonomous SRE that lives in your infrastructure",
@@ -168,31 +179,31 @@ export const defaults: LandingContent = {
       {
         icon: "Workflow",
         title: pt("Compresses 4 hours of data gathering to 15 minutes"),
-        bullets: [
-          pt("Auto-correlates logs, metrics, and traces across your observability stack"),
-          pt("Identifies causality — not just timestamps"),
-          pt("Hands engineers a finished investigation, not a haystack"),
-        ],
+        bullets: ptList(
+          "Auto-correlates logs, metrics, and traces across your observability stack",
+          "Identifies causality — not just timestamps",
+          "Hands engineers a finished investigation, not a haystack"
+        ),
         demoType: "correlation",
       },
       {
         icon: "Bot",
         title: pt("Handles incidents autonomously — no hand-holding"),
-        bullets: [
-          pt("Maintains interaction memory of your team's risk tolerances"),
-          pt("Takes action without waiting for approval on routine fixes"),
-          pt("Escalates with 90% of the investigation already complete"),
-        ],
+        bullets: ptList(
+          "Maintains interaction memory of your team's risk tolerances",
+          "Takes action without waiting for approval on routine fixes",
+          "Escalates with 90% of the investigation already complete"
+        ),
         demoType: "autoaction",
       },
       {
         icon: "ShieldCheck",
         title: pt("Deploy in your VPC. Own your data. Control your stack."),
-        bullets: [
-          pt("Runs entirely in your AWS / Azure / GCP environment"),
-          pt("GDPR, HIPAA, and FedRAMP ready out of the box"),
-          pt("Air-gappable for highest-security environments"),
-        ],
+        bullets: ptList(
+          "Runs entirely in your AWS / Azure / GCP environment",
+          "GDPR, HIPAA, and FedRAMP ready out of the box",
+          "Air-gappable for highest-security environments"
+        ),
         demoType: "vpc",
       },
     ],
@@ -203,11 +214,11 @@ export const defaults: LandingContent = {
     sub: pt(
       "When the on-call rotation became the bottleneck for one of the world's most operationally complex airlines, Archer was deployed inside the existing observability stack — no telemetry ever left the boundary."
     ),
-    bullets: [
-      pt("Full integration with Grafana, Sumo Logic, AppDynamics — no rip-and-replace"),
-      pt("Routine triage handled autonomously, with human-in-the-loop on Sev1 hand-offs"),
-      pt("Senior engineers returned to roadmap work within the first quarter"),
-    ],
+    bullets: ptList(
+      "Full integration with Grafana, Sumo Logic, AppDynamics — no rip-and-replace",
+      "Routine triage handled autonomously, with human-in-the-loop on Sev1 hand-offs",
+      "Senior engineers returned to roadmap work within the first quarter"
+    ),
     ctaLabel: "Read the full case study",
     metrics: [
       { value: "60%", label: pt("Reduction in Mean Time To Repair") },
