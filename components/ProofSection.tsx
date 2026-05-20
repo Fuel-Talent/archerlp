@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Icon } from "./icons";
+import RichText from "./RichText";
 import { track } from "@/lib/analytics";
 import type { LandingContent } from "@/content/types";
 
@@ -18,16 +19,22 @@ export default function ProofSection({
         <div className="grid lg:grid-cols-[1.1fr,1fr] gap-12 items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-              {content.headline}{" "}
-              <span className="text-accent">{content.headlineAccent}</span>
+              <RichText value={content.headline} />{" "}
+              <span className="text-accent">
+                <RichText value={content.headlineAccent} />
+              </span>
             </h2>
-            <p className="mt-4 text-steel-300 max-w-xl">{content.sub}</p>
+            <p className="mt-4 text-steel-300 max-w-xl">
+              <RichText value={content.sub} />
+            </p>
 
             <div className="mt-8 space-y-3">
-              {content.bullets.map((t) => (
-                <div key={t} className="flex gap-2.5 text-sm text-steel-200">
+              {content.bullets.map((t, i) => (
+                <div key={i} className="flex gap-2.5 text-sm text-steel-200">
                   <Icon name="CheckCircle2" className="h-5 w-5 shrink-0 text-emerald-400" />
-                  <span>{t}</span>
+                  <span>
+                    <RichText value={t} />
+                  </span>
                 </div>
               ))}
             </div>
@@ -47,7 +54,7 @@ export default function ProofSection({
           <div className="grid gap-4">
             {content.metrics.map((m, i) => (
               <motion.div
-                key={m.label}
+                key={i}
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -57,7 +64,9 @@ export default function ProofSection({
                 <div className="text-5xl font-semibold tracking-tight text-white tabular-nums">
                   {m.value}
                 </div>
-                <div className="text-sm text-steel-300">{m.label}</div>
+                <div className="text-sm text-steel-300">
+                  <RichText value={m.label} />
+                </div>
               </motion.div>
             ))}
             {content.source ? (

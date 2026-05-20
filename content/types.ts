@@ -37,6 +37,26 @@ export type DemoType = "correlation" | "autoaction" | "vpc";
 
 export type CellValue = "true" | "false" | "limited";
 
+// Portable Text — rich text with italic and bold marks.
+// Each block has _type, _key, style "normal", and a children array of spans.
+// Spans carry the text and an optional marks[] of "em"/"strong".
+export type RichTextSpan = {
+  _type: "span";
+  _key: string;
+  text: string;
+  marks?: ("em" | "strong")[];
+};
+
+export type RichTextBlock = {
+  _type: "block";
+  _key: string;
+  style: "normal";
+  children: RichTextSpan[];
+  markDefs?: never[];
+};
+
+export type RichText = RichTextBlock[];
+
 export type LandingContent = {
   meta: {
     title: string;
@@ -50,9 +70,9 @@ export type LandingContent = {
   };
   hero: {
     eyebrow: string;
-    headlinePre: string;
-    headlineAccent: string;
-    sub: string;
+    headlinePre: RichText;
+    headlineAccent: RichText;
+    sub: RichText;
     primaryCta: CtaLink;
     secondaryCta: CtaLink;
     trustBadges: TrustBadge[];
@@ -66,88 +86,88 @@ export type LandingContent = {
     script: TerminalLine[];
   };
   problem: {
-    headline: string;
-    sub: string;
-    pains: { icon: IconKey; title: string; body: string }[];
+    headline: RichText;
+    sub: RichText;
+    pains: { icon: IconKey; title: RichText; body: RichText }[];
   };
   agitate: {
-    headline: string;
-    sub: string;
-    quotes: { body: string; who: string; org: string }[];
-    stats: { icon: IconKey; value: string; label: string }[];
+    headline: RichText;
+    sub: RichText;
+    quotes: { body: RichText; who: string; org: string }[];
+    stats: { icon: IconKey; value: string; label: RichText }[];
   };
   solution: {
-    headline: string;
-    sub: string;
+    headline: RichText;
+    sub: RichText;
     blocks: {
       icon: IconKey;
-      title: string;
-      bullets: string[];
+      title: RichText;
+      bullets: RichText[];
       demoType: DemoType;
     }[];
   };
   proof: {
-    headline: string;
-    headlineAccent: string;
-    sub: string;
-    bullets: string[];
+    headline: RichText;
+    headlineAccent: RichText;
+    sub: RichText;
+    bullets: RichText[];
     ctaLabel: string;
-    metrics: { value: string; label: string }[];
+    metrics: { value: string; label: RichText }[];
     source: string;
   };
   howItWorks: {
     eyebrow: string;
-    headline: string;
-    steps: { icon: IconKey; title: string; body: string }[];
+    headline: RichText;
+    steps: { icon: IconKey; title: RichText; body: RichText }[];
   };
   differentiation: {
     eyebrow: string;
-    headline: string;
-    leftCard: { eyebrow: string; title: string; body: string };
-    rightCard: { eyebrow: string; title: string; body: string };
-    rows: { label: string; saas: CellValue; archer: CellValue }[];
+    headline: RichText;
+    leftCard: { eyebrow: string; title: RichText; body: RichText };
+    rightCard: { eyebrow: string; title: RichText; body: RichText };
+    rows: { label: RichText; saas: CellValue; archer: CellValue }[];
   };
   demo: {
     eyebrow: string;
-    headline: string;
-    sub: string;
+    headline: RichText;
+    sub: RichText;
     instantCard: {
       pillLabel: string;
-      title: string;
-      body: string;
+      title: RichText;
+      body: RichText;
       ctaLabel: string;
       ctaLoadingLabel: string;
       fineprint: string;
-      successTitle: string;
-      successBody: string;
+      successTitle: RichText;
+      successBody: RichText;
     };
     bookCallCard: {
       pillLabel: string;
-      title: string;
-      body: string;
+      title: RichText;
+      body: RichText;
       ctaLabel: string;
       ctaLoadingLabel: string;
       fineprint: string;
-      successTitle: string;
-      successBody: string;
+      successTitle: RichText;
+      successBody: RichText;
       roles: string[];
     };
   };
   stickyCta: {
-    headline: string;
-    sub: string;
+    headline: RichText;
+    sub: RichText;
     ctaLabel: string;
   };
   exitIntent: {
     eyebrow: string;
-    headline: string;
-    sub: string;
+    headline: RichText;
+    sub: RichText;
     videoPlaceholder: string;
     primaryCta: string;
     secondaryCta: string;
   };
   footer: {
-    blurb: string;
+    blurb: RichText;
     trustLine: string;
     columns: { title: string; links: NavLink[] }[];
     copyright: string;

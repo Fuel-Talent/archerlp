@@ -1,6 +1,7 @@
 "use client";
 
 import { ShieldCheck } from "lucide-react";
+import RichText from "./RichText";
 import type { LandingContent, NavLink } from "@/content/types";
 
 export default function Footer({
@@ -25,7 +26,7 @@ export default function Footer({
               </span>
             </div>
             <p className="mt-4 text-sm text-steel-400 max-w-md">
-              {content.blurb}
+              <RichText value={content.blurb} />
             </p>
             {content.trustLine ? (
               <div className="mt-5 inline-flex items-center gap-2 text-xs text-steel-400">

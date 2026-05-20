@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import AnimatedSection from "./AnimatedSection";
 import { Icon } from "./icons";
+import RichText from "./RichText";
 import type { DemoType, LandingContent } from "@/content/types";
 
 function Bullet({ children }: { children: React.ReactNode }) {
@@ -95,15 +96,17 @@ export default function SolutionSection({
       <div className="container-x">
         <div className="max-w-3xl">
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            {content.headline}
+            <RichText value={content.headline} />
           </h2>
-          <p className="mt-4 text-steel-300">{content.sub}</p>
+          <p className="mt-4 text-steel-300">
+            <RichText value={content.sub} />
+          </p>
         </div>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {content.blocks.map((b, i) => (
             <motion.div
-              key={b.title}
+              key={i}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -114,11 +117,13 @@ export default function SolutionSection({
                 <Icon name={b.icon} className="h-5 w-5" />
               </div>
               <h3 className="mt-5 text-lg font-semibold text-white leading-snug">
-                {b.title}
+                <RichText value={b.title} />
               </h3>
               <ul className="mt-4 space-y-2">
-                {b.bullets.map((t) => (
-                  <Bullet key={t}>{t}</Bullet>
+                {b.bullets.map((t, idx) => (
+                  <Bullet key={idx}>
+                    <RichText value={t} />
+                  </Bullet>
                 ))}
               </ul>
               <div className="mt-6">

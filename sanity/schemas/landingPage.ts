@@ -34,6 +34,49 @@ const navLink = {
   preview: { select: { title: "label", subtitle: "href" } },
 };
 
+// Rich-text block: italic + bold marks only. No headings, no lists, no links.
+// Headings/structure are controlled by the design — the editor only chooses
+// inline emphasis within a copy field.
+const richTextBlock = {
+  type: "block" as const,
+  styles: [{ title: "Normal", value: "normal" }],
+  lists: [],
+  marks: {
+    decorators: [
+      { title: "Italic", value: "em" },
+      { title: "Bold", value: "strong" },
+    ],
+    annotations: [],
+  },
+};
+
+const richText = (overrides: { name: string; title?: string; rows?: number } & Record<string, unknown>) =>
+  defineField({
+    type: "array",
+    of: [defineArrayMember(richTextBlock)],
+    ...overrides,
+  });
+
+const richTextRequired = (overrides: { name: string; title?: string } & Record<string, unknown>) =>
+  defineField({
+    type: "array",
+    of: [defineArrayMember(richTextBlock)],
+    validation: (r) => r.required().min(1),
+    ...overrides,
+  });
+
+const richTextArray = (overrides: { name: string; title?: string } & Record<string, unknown>) =>
+  defineField({
+    type: "array",
+    of: [
+      defineArrayMember({
+        type: "array",
+        of: [defineArrayMember(richTextBlock)],
+      }),
+    ],
+    ...overrides,
+  });
+
 export const landingPage = defineType({
   name: "landingPage",
   title: "Landing page",
@@ -91,9 +134,9 @@ export const landingPage = defineType({
       group: "hero",
       fields: [
         defineField({ name: "eyebrow", type: "string" }),
-        defineField({ name: "headlinePre", title: "Headline (main)", type: "text", rows: 2, validation: (r) => r.required() }),
-        defineField({ name: "headlineAccent", title: "Headline (orange accent)", type: "text", rows: 2, validation: (r) => r.required() }),
-        defineField({ name: "sub", type: "text", rows: 3, validation: (r) => r.required() }),
+        richTextRequired({ name: "headlinePre", title: "Headline (main)" }),
+        richTextRequired({ name: "headlineAccent", title: "Headline (orange accent)" }),
+        richTextRequired({ name: "sub", title: "Subheadline" }),
         defineField({ ...ctaLink, name: "primaryCta", title: "Primary CTA" }),
         defineField({ ...ctaLink, name: "secondaryCta", title: "Secondary CTA" }),
         defineField({
@@ -166,8 +209,8 @@ export const landingPage = defineType({
       type: "object",
       group: "problem",
       fields: [
-        defineField({ name: "headline", type: "string", validation: (r) => r.required() }),
-        defineField({ name: "sub", type: "text", rows: 2 }),
+        richTextRequired({ name: "headline" }),
+        richText({ name: "sub" }),
         defineField({
           name: "pains",
           type: "array",
@@ -176,10 +219,10 @@ export const landingPage = defineType({
               type: "object",
               fields: [
                 iconField,
-                defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-                defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required() }),
+                richTextRequired({ name: "title" }),
+                richTextRequired({ name: "body" }),
               ],
-              preview: { select: { title: "title", subtitle: "icon" } },
+              preview: { select: { icon: "icon" }, prepare: ({ icon }) => ({ title: "Pain point", subtitle: icon }) },
             }),
           ],
         }),
@@ -192,8 +235,8 @@ export const landingPage = defineType({
       type: "object",
       group: "agitate",
       fields: [
-        defineField({ name: "headline", type: "string" }),
-        defineField({ name: "sub", type: "text", rows: 2 }),
+        richText({ name: "headline" }),
+        richText({ name: "sub" }),
         defineField({
           name: "quotes",
           type: "array",
@@ -201,7 +244,7 @@ export const landingPage = defineType({
             defineArrayMember({
               type: "object",
               fields: [
-                defineField({ name: "body", type: "text", rows: 4, validation: (r) => r.required() }),
+                richTextRequired({ name: "body" }),
                 defineField({ name: "who", type: "string", validation: (r) => r.required() }),
                 defineField({ name: "org", type: "string", validation: (r) => r.required() }),
               ],
@@ -218,9 +261,9 @@ export const landingPage = defineType({
               fields: [
                 iconField,
                 defineField({ name: "value", type: "string", validation: (r) => r.required() }),
-                defineField({ name: "label", type: "text", rows: 2, validation: (r) => r.required() }),
+                richTextRequired({ name: "label" }),
               ],
-              preview: { select: { title: "value", subtitle: "label" } },
+              preview: { select: { title: "value", subtitle: "icon" } },
             }),
           ],
         }),
@@ -233,8 +276,8 @@ export const landingPage = defineType({
       type: "object",
       group: "solution",
       fields: [
-        defineField({ name: "headline", type: "string", validation: (r) => r.required() }),
-        defineField({ name: "sub", type: "text", rows: 3 }),
+        richTextRequired({ name: "headline" }),
+        richText({ name: "sub" }),
         defineField({
           name: "blocks",
           type: "array",
@@ -243,13 +286,8 @@ export const landingPage = defineType({
               type: "object",
               fields: [
                 iconField,
-                defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-                defineField({
-                  name: "bullets",
-                  type: "array",
-                  of: [defineArrayMember({ type: "string" })],
-                  validation: (r) => r.min(1),
-                }),
+                richTextRequired({ name: "title" }),
+                richTextArray({ name: "bullets", title: "Bullet points (rich)" }),
                 defineField({
                   name: "demoType",
                   title: "Demo to render",
@@ -258,7 +296,7 @@ export const landingPage = defineType({
                   validation: (r) => r.required(),
                 }),
               ],
-              preview: { select: { title: "title", subtitle: "demoType" } },
+              preview: { select: { icon: "icon", demo: "demoType" }, prepare: ({ icon, demo }) => ({ title: "Solution block", subtitle: `${icon} · ${demo}` }) },
             }),
           ],
         }),
@@ -271,14 +309,10 @@ export const landingPage = defineType({
       type: "object",
       group: "proof",
       fields: [
-        defineField({ name: "headline", title: "Headline (lead-in)", type: "string" }),
-        defineField({ name: "headlineAccent", title: "Headline (orange tail)", type: "string" }),
-        defineField({ name: "sub", type: "text", rows: 3 }),
-        defineField({
-          name: "bullets",
-          type: "array",
-          of: [defineArrayMember({ type: "string" })],
-        }),
+        richTextRequired({ name: "headline", title: "Headline (lead-in)" }),
+        richTextRequired({ name: "headlineAccent", title: "Headline (orange tail)" }),
+        richText({ name: "sub" }),
+        richTextArray({ name: "bullets" }),
         defineField({ name: "ctaLabel", type: "string" }),
         defineField({
           name: "metrics",
@@ -288,9 +322,9 @@ export const landingPage = defineType({
               type: "object",
               fields: [
                 defineField({ name: "value", type: "string", validation: (r) => r.required() }),
-                defineField({ name: "label", type: "text", rows: 2, validation: (r) => r.required() }),
+                richTextRequired({ name: "label" }),
               ],
-              preview: { select: { title: "value", subtitle: "label" } },
+              preview: { select: { title: "value" } },
             }),
           ],
         }),
@@ -306,7 +340,7 @@ export const landingPage = defineType({
       group: "how",
       fields: [
         defineField({ name: "eyebrow", type: "string" }),
-        defineField({ name: "headline", type: "string", validation: (r) => r.required() }),
+        richTextRequired({ name: "headline" }),
         defineField({
           name: "steps",
           type: "array",
@@ -315,10 +349,10 @@ export const landingPage = defineType({
               type: "object",
               fields: [
                 iconField,
-                defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-                defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required() }),
+                richTextRequired({ name: "title" }),
+                richTextRequired({ name: "body" }),
               ],
-              preview: { select: { title: "title", subtitle: "body" } },
+              preview: { select: { icon: "icon" }, prepare: ({ icon }) => ({ title: "Step", subtitle: icon }) },
             }),
           ],
         }),
@@ -332,14 +366,14 @@ export const landingPage = defineType({
       group: "diff",
       fields: [
         defineField({ name: "eyebrow", type: "string" }),
-        defineField({ name: "headline", type: "text", rows: 3, validation: (r) => r.required() }),
+        richTextRequired({ name: "headline" }),
         defineField({
           name: "leftCard",
           type: "object",
           fields: [
             defineField({ name: "eyebrow", type: "string" }),
-            defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-            defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required() }),
+            richTextRequired({ name: "title" }),
+            richTextRequired({ name: "body" }),
           ],
         }),
         defineField({
@@ -347,8 +381,8 @@ export const landingPage = defineType({
           type: "object",
           fields: [
             defineField({ name: "eyebrow", type: "string" }),
-            defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-            defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required() }),
+            richTextRequired({ name: "title" }),
+            richTextRequired({ name: "body" }),
           ],
         }),
         defineField({
@@ -359,7 +393,7 @@ export const landingPage = defineType({
             defineArrayMember({
               type: "object",
               fields: [
-                defineField({ name: "label", type: "string", validation: (r) => r.required() }),
+                richTextRequired({ name: "label" }),
                 defineField({
                   name: "saas",
                   type: "string",
@@ -376,9 +410,9 @@ export const landingPage = defineType({
                 }),
               ],
               preview: {
-                select: { title: "label", saas: "saas", archer: "archer" },
-                prepare: ({ title, saas, archer }) => ({
-                  title,
+                select: { saas: "saas", archer: "archer" },
+                prepare: ({ saas, archer }) => ({
+                  title: "Comparison row",
                   subtitle: `SaaS: ${saas}  ·  Archer: ${archer}`,
                 }),
               },
@@ -396,21 +430,21 @@ export const landingPage = defineType({
       group: "demo",
       fields: [
         defineField({ name: "eyebrow", type: "string" }),
-        defineField({ name: "headline", type: "string", validation: (r) => r.required() }),
-        defineField({ name: "sub", type: "text", rows: 3 }),
+        richTextRequired({ name: "headline" }),
+        richText({ name: "sub" }),
         defineField({
           name: "instantCard",
           title: "Instant sandbox card",
           type: "object",
           fields: [
             defineField({ name: "pillLabel", type: "string", initialValue: "Recommended" }),
-            defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-            defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required() }),
+            richTextRequired({ name: "title" }),
+            richTextRequired({ name: "body" }),
             defineField({ name: "ctaLabel", type: "string", validation: (r) => r.required() }),
             defineField({ name: "ctaLoadingLabel", type: "string", initialValue: "Creating account…" }),
             defineField({ name: "fineprint", type: "text", rows: 2 }),
-            defineField({ name: "successTitle", type: "string" }),
-            defineField({ name: "successBody", type: "text", rows: 2 }),
+            richText({ name: "successTitle" }),
+            richText({ name: "successBody" }),
           ],
         }),
         defineField({
@@ -419,13 +453,13 @@ export const landingPage = defineType({
           type: "object",
           fields: [
             defineField({ name: "pillLabel", type: "string", initialValue: "Skip the demo" }),
-            defineField({ name: "title", type: "string", validation: (r) => r.required() }),
-            defineField({ name: "body", type: "text", rows: 3, validation: (r) => r.required() }),
+            richTextRequired({ name: "title" }),
+            richTextRequired({ name: "body" }),
             defineField({ name: "ctaLabel", type: "string", validation: (r) => r.required() }),
             defineField({ name: "ctaLoadingLabel", type: "string", initialValue: "Booking…" }),
             defineField({ name: "fineprint", type: "text", rows: 2 }),
-            defineField({ name: "successTitle", type: "string" }),
-            defineField({ name: "successBody", type: "text", rows: 2 }),
+            richText({ name: "successTitle" }),
+            richText({ name: "successBody" }),
             defineField({
               name: "roles",
               type: "array",
@@ -444,8 +478,8 @@ export const landingPage = defineType({
       type: "object",
       group: "extra",
       fields: [
-        defineField({ name: "headline", type: "string", validation: (r) => r.required() }),
-        defineField({ name: "sub", type: "string" }),
+        richTextRequired({ name: "headline" }),
+        richText({ name: "sub" }),
         defineField({ name: "ctaLabel", type: "string", validation: (r) => r.required() }),
       ],
     }),
@@ -456,8 +490,8 @@ export const landingPage = defineType({
       group: "extra",
       fields: [
         defineField({ name: "eyebrow", type: "string" }),
-        defineField({ name: "headline", type: "string", validation: (r) => r.required() }),
-        defineField({ name: "sub", type: "text", rows: 3 }),
+        richTextRequired({ name: "headline" }),
+        richText({ name: "sub" }),
         defineField({ name: "videoPlaceholder", type: "string", initialValue: "[ video placeholder · 1:54 ]" }),
         defineField({ name: "primaryCta", type: "string", validation: (r) => r.required() }),
         defineField({ name: "secondaryCta", type: "string", validation: (r) => r.required() }),
@@ -470,7 +504,7 @@ export const landingPage = defineType({
       type: "object",
       group: "footer",
       fields: [
-        defineField({ name: "blurb", type: "text", rows: 3, validation: (r) => r.required() }),
+        richTextRequired({ name: "blurb" }),
         defineField({ name: "trustLine", type: "string" }),
         defineField({
           name: "columns",

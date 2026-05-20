@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, X } from "lucide-react";
+import RichText from "./RichText";
 import { track } from "@/lib/analytics";
 import type { LandingContent } from "@/content/types";
 
@@ -68,9 +69,11 @@ export default function ExitIntent({
               id="exit-intent-title"
               className="mt-3 text-2xl font-semibold tracking-tight text-white"
             >
-              {content.headline}
+              <RichText value={content.headline} />
             </h3>
-            <p className="mt-2 text-sm text-steel-300">{content.sub}</p>
+            <p className="mt-2 text-sm text-steel-300">
+              <RichText value={content.sub} />
+            </p>
             <div className="mt-5 aspect-video rounded-lg border border-white/10 bg-ink-800/60 grid place-items-center text-steel-500 text-xs font-mono">
               {content.videoPlaceholder}
             </div>

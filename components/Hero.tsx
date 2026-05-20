@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import TerminalDemo from "./TerminalDemo";
 import { Icon } from "./icons";
+import RichText from "./RichText";
 import { track } from "@/lib/analytics";
 import type { LandingContent } from "@/content/types";
 
@@ -39,8 +40,10 @@ export default function Hero({
             transition={{ duration: 0.55, delay: 0.05 }}
             className="mt-5 text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-white leading-[1.05]"
           >
-            {hero.headlinePre}{" "}
-            <span className="text-accent">{hero.headlineAccent}</span>
+            <RichText value={hero.headlinePre} />{" "}
+            <span className="text-accent">
+              <RichText value={hero.headlineAccent} />
+            </span>
           </motion.h1>
 
           <motion.p
@@ -49,7 +52,7 @@ export default function Hero({
             transition={{ duration: 0.55, delay: 0.12 }}
             className="mt-5 text-lg text-steel-300 max-w-xl"
           >
-            {hero.sub}
+            <RichText value={hero.sub} />
           </motion.p>
 
           <motion.div

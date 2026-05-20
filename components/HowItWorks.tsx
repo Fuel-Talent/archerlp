@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import AnimatedSection from "./AnimatedSection";
 import { Icon } from "./icons";
+import RichText from "./RichText";
 import type { LandingContent } from "@/content/types";
 
 export default function HowItWorks({
@@ -18,14 +19,14 @@ export default function HowItWorks({
             <span className="eyebrow">{content.eyebrow}</span>
           ) : null}
           <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            {content.headline}
+            <RichText value={content.headline} />
           </h2>
         </div>
 
         <ol className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {content.steps.map((s, i) => (
             <motion.li
-              key={s.title}
+              key={i}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
@@ -41,10 +42,10 @@ export default function HowItWorks({
                 </span>
               </div>
               <h3 className="mt-5 text-base font-semibold text-white leading-snug">
-                {s.title}
+                <RichText value={s.title} />
               </h3>
               <p className="mt-2 text-sm text-steel-300 leading-relaxed">
-                {s.body}
+                <RichText value={s.body} />
               </p>
             </motion.li>
           ))}

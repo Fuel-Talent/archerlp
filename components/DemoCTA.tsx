@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Loader2 } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Icon } from "./icons";
+import RichText from "./RichText";
 import { track } from "@/lib/analytics";
 import type { LandingContent } from "@/content/types";
 
@@ -47,9 +48,11 @@ export default function DemoCTA({
             <span className="eyebrow">{content.eyebrow}</span>
           ) : null}
           <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            {content.headline}
+            <RichText value={content.headline} />
           </h2>
-          <p className="mt-4 text-steel-300">{content.sub}</p>
+          <p className="mt-4 text-steel-300">
+            <RichText value={content.sub} />
+          </p>
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
@@ -111,9 +114,11 @@ function InstantAccessCard({
           </span>
         </div>
         <h3 className="mt-5 text-xl font-semibold text-white">
-          {content.title}
+          <RichText value={content.title} />
         </h3>
-        <p className="mt-2 text-sm text-steel-300">{content.body}</p>
+        <p className="mt-2 text-sm text-steel-300">
+          <RichText value={content.body} />
+        </p>
 
         {done ? (
           <motion.div
@@ -123,9 +128,11 @@ function InstantAccessCard({
           >
             <Icon name="CheckCircle2" className="mx-auto h-9 w-9 text-emerald-400" />
             <h4 className="mt-3 text-base font-semibold text-white">
-              {content.successTitle}
+              <RichText value={content.successTitle} />
             </h4>
-            <p className="mt-1.5 text-xs text-steel-200">{content.successBody}</p>
+            <p className="mt-1.5 text-xs text-steel-200">
+              <RichText value={content.successBody} />
+            </p>
           </motion.div>
         ) : (
           <form onSubmit={onSubmit} noValidate className="mt-6 space-y-4">
@@ -241,8 +248,12 @@ function BookCallCard({
           {content.pillLabel}
         </span>
       </div>
-      <h3 className="mt-5 text-xl font-semibold text-white">{content.title}</h3>
-      <p className="mt-2 text-sm text-steel-300">{content.body}</p>
+      <h3 className="mt-5 text-xl font-semibold text-white">
+        <RichText value={content.title} />
+      </h3>
+      <p className="mt-2 text-sm text-steel-300">
+        <RichText value={content.body} />
+      </p>
 
       {done ? (
         <motion.div
@@ -252,9 +263,11 @@ function BookCallCard({
         >
           <Icon name="CheckCircle2" className="mx-auto h-9 w-9 text-emerald-400" />
           <h4 className="mt-3 text-base font-semibold text-white">
-            {content.successTitle}
+            <RichText value={content.successTitle} />
           </h4>
-          <p className="mt-1.5 text-xs text-steel-200">{content.successBody}</p>
+          <p className="mt-1.5 text-xs text-steel-200">
+            <RichText value={content.successBody} />
+          </p>
         </motion.div>
       ) : (
         <form onSubmit={onSubmit} noValidate className="mt-6 space-y-4">

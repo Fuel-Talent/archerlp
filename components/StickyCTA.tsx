@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import RichText from "./RichText";
 import { track } from "@/lib/analytics";
 import type { LandingContent } from "@/content/types";
 
@@ -52,10 +53,10 @@ export default function StickyCTA({
             <div className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-ink-900/95 backdrop-blur-md px-5 py-3 shadow-ring">
               <div className="min-w-0">
                 <div className="text-sm font-semibold text-white truncate">
-                  {content.headline}
+                  <RichText value={content.headline} />
                 </div>
                 <div className="text-xs text-steel-400 truncate">
-                  {content.sub}
+                  <RichText value={content.sub} />
                 </div>
               </div>
               <a

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import AnimatedSection from "./AnimatedSection";
 import { Icon } from "./icons";
+import RichText from "./RichText";
 import type { LandingContent } from "@/content/types";
 
 export default function AgitateSection({
@@ -15,9 +16,11 @@ export default function AgitateSection({
       <div className="container-x">
         <div className="max-w-2xl">
           <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            {content.headline}
+            <RichText value={content.headline} />
           </h2>
-          <p className="mt-4 text-steel-300">{content.sub}</p>
+          <p className="mt-4 text-steel-300">
+            <RichText value={content.sub} />
+          </p>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -32,7 +35,7 @@ export default function AgitateSection({
             >
               <Icon name="Quote" className="h-5 w-5 text-accent" />
               <blockquote className="mt-4 text-[15px] leading-relaxed text-steel-100">
-                &ldquo;{q.body}&rdquo;
+                &ldquo;<RichText value={q.body} />&rdquo;
               </blockquote>
               <figcaption className="mt-6 pt-4 border-t border-white/5 text-xs text-steel-400">
                 <div className="font-semibold text-steel-200">{q.who}</div>
@@ -46,7 +49,7 @@ export default function AgitateSection({
           <div className="grid gap-px md:grid-cols-3 rounded-xl overflow-hidden bg-white/5">
             {content.stats.map((s, i) => (
               <motion.div
-                key={s.value + s.label}
+                key={s.value + i}
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
@@ -58,7 +61,7 @@ export default function AgitateSection({
                   {s.value}
                 </div>
                 <p className="mt-2 text-sm text-steel-300 leading-relaxed">
-                  {s.label}
+                  <RichText value={s.label} />
                 </p>
               </motion.div>
             ))}

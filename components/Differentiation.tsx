@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
+import RichText from "./RichText";
 import type { CellValue, LandingContent } from "@/content/types";
 
 function Cell({ value }: { value: CellValue }) {
@@ -28,7 +29,7 @@ export default function Differentiation({
             <span className="eyebrow">{content.eyebrow}</span>
           ) : null}
           <h2 className="mt-4 text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-            {content.headline}
+            <RichText value={content.headline} />
           </h2>
         </div>
 
@@ -44,9 +45,11 @@ export default function Differentiation({
               {content.leftCard.eyebrow}
             </div>
             <h3 className="mt-2 text-xl font-semibold text-white">
-              {content.leftCard.title}
+              <RichText value={content.leftCard.title} />
             </h3>
-            <p className="mt-2 text-sm text-steel-300">{content.leftCard.body}</p>
+            <p className="mt-2 text-sm text-steel-300">
+              <RichText value={content.leftCard.body} />
+            </p>
           </motion.div>
 
           <motion.div
@@ -60,9 +63,11 @@ export default function Differentiation({
               {content.rightCard.eyebrow}
             </div>
             <h3 className="mt-2 text-xl font-semibold text-white">
-              {content.rightCard.title}
+              <RichText value={content.rightCard.title} />
             </h3>
-            <p className="mt-2 text-sm text-steel-300">{content.rightCard.body}</p>
+            <p className="mt-2 text-sm text-steel-300">
+              <RichText value={content.rightCard.body} />
+            </p>
           </motion.div>
         </div>
 
@@ -74,12 +79,14 @@ export default function Differentiation({
           </div>
           {content.rows.map((r, i) => (
             <div
-              key={r.label}
+              key={i}
               className={`grid grid-cols-[1.4fr,0.6fr,0.6fr] items-center text-sm ${
                 i % 2 ? "bg-white/[0.015]" : ""
               }`}
             >
-              <div className="px-6 py-4 text-steel-200">{r.label}</div>
+              <div className="px-6 py-4 text-steel-200">
+                <RichText value={r.label} />
+              </div>
               <div className="px-6 py-4 flex justify-center">
                 <Cell value={r.saas} />
               </div>
