@@ -19,12 +19,12 @@ export default defineConfig({
           .items([
             S.listItem()
               .title("Landing page")
-              .id("landingPage")
+              .id("singleton-landingPage")
               .child(
-                S.document()
+                S.editor()
+                  .id("landingPageEditor")
                   .schemaType("landingPage")
                   .documentId("landingPage")
-                  .title("Landing page")
               ),
           ]),
     }),
