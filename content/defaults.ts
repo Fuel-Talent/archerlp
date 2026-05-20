@@ -312,6 +312,8 @@ export const defaults: LandingContent = {
       successBody: pt(
         "Check your inbox for a magic link. The demo will be live for 7 days."
       ),
+      audienceId: "",
+      redirectUrl: "/welcome",
     },
     bookCallCard: {
       pillLabel: "Skip the demo",
@@ -334,6 +336,8 @@ export const defaults: LandingContent = {
         "Principal / Staff SRE",
         "Other",
       ],
+      audienceId: "",
+      redirectUrl: "/thank-you",
     },
   },
   stickyCta: {

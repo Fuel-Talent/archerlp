@@ -444,6 +444,21 @@ export const landingPage = defineType({
             defineField({ name: "fineprint", type: "text", rows: 2 }),
             richText({ name: "successTitle" }),
             richText({ name: "successBody" }),
+            defineField({
+              name: "audienceId",
+              title: "Resend audience ID",
+              type: "string",
+              description:
+                "UUID of the Resend audience submissions append to. Find it at resend.com/audiences.",
+            }),
+            defineField({
+              name: "redirectUrl",
+              title: "Redirect URL after submit",
+              type: "string",
+              description:
+                "Where to send the user after a successful submit. Use an internal path like /welcome or an external URL.",
+              initialValue: "/welcome",
+            }),
           ],
         }),
         defineField({
@@ -464,6 +479,21 @@ export const landingPage = defineType({
               type: "array",
               of: [defineArrayMember({ type: "string" })],
               validation: (r) => r.min(1),
+            }),
+            defineField({
+              name: "audienceId",
+              title: "Resend audience ID",
+              type: "string",
+              description:
+                "UUID of the Resend audience submissions append to. Typically a different list than instant-access (e.g. 'sales-qualified leads').",
+            }),
+            defineField({
+              name: "redirectUrl",
+              title: "Redirect URL after submit",
+              type: "string",
+              description:
+                "Where to send the user after a successful submit. Often a Calendly URL for booking flows.",
+              initialValue: "/thank-you",
             }),
           ],
         }),

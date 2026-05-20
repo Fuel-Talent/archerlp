@@ -53,8 +53,8 @@ export const landingPageQuery = groq`*[_type == "landingPage" && _id == "landing
   },
   demo{
     eyebrow, headline, sub,
-    instantCard{pillLabel, title, body, ctaLabel, ctaLoadingLabel, fineprint, successTitle, successBody},
-    bookCallCard{pillLabel, title, body, ctaLabel, ctaLoadingLabel, fineprint, successTitle, successBody, roles}
+    instantCard{pillLabel, title, body, ctaLabel, ctaLoadingLabel, fineprint, successTitle, successBody, audienceId, redirectUrl},
+    bookCallCard{pillLabel, title, body, ctaLabel, ctaLoadingLabel, fineprint, successTitle, successBody, roles, audienceId, redirectUrl}
   },
   stickyCta{headline, sub, ctaLabel},
   exitIntent{eyebrow, headline, sub, videoPlaceholder, primaryCta, secondaryCta},

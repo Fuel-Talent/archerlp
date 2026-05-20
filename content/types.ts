@@ -142,6 +142,11 @@ export type LandingContent = {
       fineprint: string;
       successTitle: RichText;
       successBody: RichText;
+      // Resend audience UUID — submissions append a contact to this list.
+      audienceId: string;
+      // Where to send the user after a successful submit (internal path
+      // like "/welcome" or external URL like a Calendly link).
+      redirectUrl: string;
     };
     bookCallCard: {
       pillLabel: string;
@@ -153,6 +158,8 @@ export type LandingContent = {
       successTitle: RichText;
       successBody: RichText;
       roles: string[];
+      audienceId: string;
+      redirectUrl: string;
     };
   };
   stickyCta: {

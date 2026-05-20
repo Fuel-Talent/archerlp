@@ -77,8 +77,11 @@ function InstantAccessCard({
   const update = <K extends keyof InstantForm>(k: K, v: InstantForm[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitError(null);
     const errs = validateInstant(form);
     setErrors(errs);
     if (Object.keys(errs).length) {
@@ -87,9 +90,34 @@ function InstantAccessCard({
     }
     setSubmitting(true);
     try {
-      await new Promise((r) => setTimeout(r, 900));
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          flow: "instant_access",
+          audienceId: content.audienceId,
+          name: form.name,
+          email: form.email,
+          company: form.company,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Submission failed");
+      }
       track("form_submit", { flow: "instant_access", company: form.company });
       setDone(true);
+      if (content.redirectUrl) {
+        window.location.href = content.redirectUrl;
+      }
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Something went wrong"
+      );
+      track("form_error", { flow: "instant_access", fields: "network" });
     } finally {
       setSubmitting(false);
     }
@@ -193,7 +221,13 @@ function InstantAccessCard({
                 </>
               )}
             </button>
-            <p className="text-[11px] text-steel-500">{content.fineprint}</p>
+            {submitError ? (
+              <p className="text-[11px] text-rose-400 text-center">
+                {submitError}
+              </p>
+            ) : (
+              <p className="text-[11px] text-steel-500">{content.fineprint}</p>
+            )}
           </form>
         )}
       </div>
@@ -214,8 +248,11 @@ function BookCallCard({
   const update = <K extends keyof CallForm>(k: K, v: CallForm[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
 
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitError(null);
     const errs = validateCall(form);
     setErrors(errs);
     if (Object.keys(errs).length) {
@@ -224,9 +261,36 @@ function BookCallCard({
     }
     setSubmitting(true);
     try {
-      await new Promise((r) => setTimeout(r, 900));
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          flow: "book_call",
+          audienceId: content.audienceId,
+          name: form.name,
+          email: form.email,
+          company: form.company,
+          role: form.role,
+          pain: form.pain,
+        }),
+      });
+      const data = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Submission failed");
+      }
       track("form_submit", { flow: "book_call", role: form.role, company: form.company });
       setDone(true);
+      if (content.redirectUrl) {
+        window.location.href = content.redirectUrl;
+      }
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Something went wrong"
+      );
+      track("form_error", { flow: "book_call", fields: "network" });
     } finally {
       setSubmitting(false);
     }
@@ -363,7 +427,15 @@ function BookCallCard({
               </>
             )}
           </button>
-          <p className="text-[11px] text-steel-500 text-center">{content.fineprint}</p>
+          {submitError ? (
+            <p className="text-[11px] text-rose-400 text-center">
+              {submitError}
+            </p>
+          ) : (
+            <p className="text-[11px] text-steel-500 text-center">
+              {content.fineprint}
+            </p>
+          )}
         </form>
       )}
     </motion.div>
